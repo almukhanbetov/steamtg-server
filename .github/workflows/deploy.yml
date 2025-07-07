@@ -1,0 +1,36 @@
+name: Deploy to VDS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.7.0
+      with:
+        ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+    - name: Copy files to server
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
+          cd /root/steamtg || mkdir /root/steamtg
+        "
+        rsync -avz --delete ./ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/root/steamtg
+
+    - name: Build and run with Docker on server
+      run: |
+        ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
+          cd /root/steamtg &&
+          docker build -t steamtg-app . &&
+          docker stop steamtg-container || true &&
+          docker rm steamtg-container || true &&
+          docker run -d --name steamtg-container -p 8080:8080 steamtg-app
+        "

@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    ports:
+      - "8282:8282"
+    environment:
+      - DATABASE_URL=postgres://postgres:Zxcvbnm123@db:5432/steamtg_db?sslmode=disable
+    depends_on:
+      - db
+  db:
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Zxcvbnm123
+      POSTGRES_DB: steamtg_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
