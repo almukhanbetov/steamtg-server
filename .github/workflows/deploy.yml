@@ -32,5 +32,5 @@ jobs:
           docker build -t steamtg-app . &&
           docker stop steamtg-container || true &&
           docker rm steamtg-container || true &&
-          docker run -d --name steamtg-container -p 8080:8080 steamtg-app
+          docker run -d --name steamtg-container -p 8989:8989 steamtg-app
         "

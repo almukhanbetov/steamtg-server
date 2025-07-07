@@ -17,7 +17,7 @@ COPY . .
 RUN go build -o main .
 
 # Открываем порт
-EXPOSE 8282
+EXPOSE 8989
 
 # Команда запуска
 CMD ["./main"]

@@ -4,7 +4,7 @@ services:
   app:
     build: .
     ports:
-      - "8282:8282"
+      - "8989:8989"
     environment:
       - DATABASE_URL=postgres://postgres:Zxcvbnm123@db:5432/steamtg_db?sslmode=disable
     depends_on:
