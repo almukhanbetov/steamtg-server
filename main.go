@@ -33,5 +33,7 @@ func main() {
 		AllowCredentials: true,
 	}))
 	routes.SetupRoutes(r, db)
+	log.Println("🚀 Server running on port 8989")
 	r.Run("0.0.0.0:8989")
+	
 }
