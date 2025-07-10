@@ -27,5 +27,5 @@ func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
 	routes.SetupRoutes(r, db)
-	r.Run(":8989")
+	r.Run("0.0.0.0:8989")
 }
