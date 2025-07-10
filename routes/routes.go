@@ -16,6 +16,11 @@ func SetupRoutes(r *gin.Engine, db *pgxpool.Pool) {
 
 	api := r.Group("/api")
 	{
+		api.GET("/", func(c *gin.Context) {
+			c.JSON(200, gin.H{
+				"status": "API is running",
+			})
+		})
 		// 🔹 DRIVERS
 		api.POST("/drivers", handlers.CreateDriverHandler(db))
 		api.GET("/drivers", handlers.GetDriversHandler(db))

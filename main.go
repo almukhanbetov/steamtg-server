@@ -25,6 +25,7 @@ func main() {
 	defer db.Close()
 
 	r := gin.Default()
+	
 	r.Use(cors.Default())
 	routes.SetupRoutes(r, db)
 	r.Run("0.0.0.0:8989")
