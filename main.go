@@ -25,8 +25,13 @@ func main() {
 	defer db.Close()
 
 	r := gin.Default()
-	
-	r.Use(cors.Default())
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"https://test.steamtg.com"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}))
 	routes.SetupRoutes(r, db)
 	r.Run("0.0.0.0:8989")
 }
