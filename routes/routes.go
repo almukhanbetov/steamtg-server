@@ -30,6 +30,8 @@ func SetupRoutes(r *gin.Engine, db *pgxpool.Pool) {
 		// 🔹 CLIENTS
 		api.POST("/clients", handlers.CreateClientHandler(db))
 		api.POST("/clients-with-order", handlers.CreateClientAndOrderHandler(db))
+		api.GET("/orders/client/:id", handlers.GetOrdersForClient(db))
+
 
 		// 🔹 CATEGORIES
 		api.GET("/categories", handlers.GetCategoriesHandler(db))

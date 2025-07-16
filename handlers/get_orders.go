@@ -122,3 +122,50 @@ func GetOrdersForDriver(db *pgxpool.Pool) gin.HandlerFunc {
 		c.JSON(http.StatusOK, orders)
 	}
 }
+// 🔹 Получение заказов по client_id
+func GetOrdersForClient(db *pgxpool.Pool) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		clientID := c.Param("id")
+		log.Println("📦 Получение заказов для clientID:", clientID)
+
+		rows, err := db.Query(context.Background(), `
+			SELECT o.id, c.name, c.phone, ST_Y(c.location), ST_X(c.location), o.status,
+			       d.id, d.name, ST_Y(d.location), ST_X(d.location)
+			FROM orders o
+			JOIN clients c ON o.client_id = c.id
+			JOIN drivers d ON o.driver_id = d.id
+			WHERE o.client_id = $1
+		`, clientID)
+
+		if err != nil {
+			log.Println("❌ Ошибка запроса заказов клиента:", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка при загрузке заказов"})
+			return
+		}
+		defer rows.Close()
+
+		var orders []Order
+		for rows.Next() {
+			var o Order
+			if err := rows.Scan(
+				&o.ID,
+				&o.ClientName,
+				&o.ClientPhone,
+				&o.Lat,
+				&o.Lon,
+				&o.Status,
+				&o.DriverID,
+				&o.DriverName,
+				&o.DriverLat,
+				&o.DriverLon,
+			); err != nil {
+				log.Println("❌ Ошибка сканирования строки:", err)
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка при парсинге заказов"})
+				return
+			}
+			orders = append(orders, o)
+		}
+
+		c.JSON(http.StatusOK, orders)
+	}
+}

@@ -116,6 +116,10 @@ func CreateClientAndOrderHandler(db *pgxpool.Pool) gin.HandlerFunc {
 		}
 
 		log.Println("✅ Клиент и заказ успешно сохранены.")
-		c.JSON(http.StatusOK, gin.H{"message": "Клиент и заказ созданы", "driver_id": driverID})
+		c.JSON(http.StatusOK, gin.H{
+			"message":   "Клиент и заказ созданы",
+			"driver_id": driverID,
+			"client_id": clientID, // 🔥 Добавлено сюда
+		})
 	}
 }
